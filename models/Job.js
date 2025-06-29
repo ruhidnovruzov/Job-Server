@@ -28,7 +28,7 @@ const JobSchema = new mongoose.Schema({
   },
   salaryRange: {
     type: String,
-    enum: ['1-500 AZN', '501-1000 AZN', '1001-2000 AZN', '2001-3000 AZN', '3000+ AZN'],
+    enum: ['1-500 AZN', '501-1000 AZN', '1001-2000 AZN', '2001-3000 AZN', 'Müzakirə yolu ilə', '3000+ AZN'],
     default: 'Müzakirə yolu ilə',
   },
   jobType: {
@@ -38,7 +38,7 @@ const JobSchema = new mongoose.Schema({
   },
   experienceLevel: {
     type: String,
-    enum: ['Təcrübəsiz', 'Junior', 'Mid-Level', 'Senior', 'Müdir'],
+    enum: ['Təcrübəsiz', 'Junior', 'Mid-Level', 'Senior', 'Lead'],
     default: 'Təcrübəsiz'
   },
   applicationDeadline: {
