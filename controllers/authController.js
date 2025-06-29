@@ -196,7 +196,7 @@ const forgotPassword = async (req, res) => {
         <p>Əgər bu tələbi siz etməmisinizsə, bu emailı nəzərə almayın.</p>
         <hr style="margin: 30px 0;">
         <p style="color: #666; font-size: 14px; text-align: center;">
-          Job Board Platforması<br>
+          Job Portal Platforması<br>
           Bu avtomatik göndərilən emaildir, cavab verməyin.
         </p>
       </div>

@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
     // Email seçimləri
     const mailOptions = {
-      from: `${process.env.EMAIL_FROM_NAME || 'Job Board'} <${process.env.EMAIL_FROM}>`,
+      from: `${process.env.EMAIL_FROM_NAME || 'Job Portal'} <${process.env.EMAIL_FROM}>`,
       to: options.email,
       subject: options.subject,
       html: options.html,
