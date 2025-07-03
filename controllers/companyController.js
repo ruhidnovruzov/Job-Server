@@ -8,12 +8,11 @@ const { v4: uuidv4 } = require('uuid'); // Unikal fayl adları üçün
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-
-    cb(null, path.join(process.cwd(), 'uploads/companyLogos')); // Fayllar kök qovluqdaki uploads/companyLogos'a düşür
+    cb(null, path.join(process.cwd(), 'uploads/companyLogos')); 
   },
   filename: function (req, file, cb) {
-
-    cb(null, `${uuidv4()}${extname}`); // Unikal ID + orijinal uzantı
+    const extname = path.extname(file.originalname); // <== BU LİNE ƏLAVƏ OLUNMALI İDİ
+    cb(null, `${uuidv4()}${extname}`);
   },
 });
 
