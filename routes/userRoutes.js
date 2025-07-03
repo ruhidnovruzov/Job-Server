@@ -6,9 +6,7 @@ const ApplicantProfile = require('../models/ApplicantProfile');
 const Company = require('../models/Company');
 const User = require('../models/User');
 
-// @desc    Get user profile (İstifadəçinin öz profilini almaq)
-// @route   GET /api/users/profile
-// @access  Private
+
 router.get('/profile', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-password');
@@ -40,9 +38,7 @@ router.get('/profile', protect, async (req, res) => {
   }
 });
 
-// @desc    Update user profile (İstifadəçinin öz profilini yeniləmək)
-// @route   PUT /api/users/profile
-// @access  Private
+
 router.put('/profile', protect, async (req, res) => {
   const { email, password,
           firstName, lastName, phone, category, yearsOfExperience, education, experience, skills, about,

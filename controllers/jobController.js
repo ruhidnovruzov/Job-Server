@@ -5,13 +5,9 @@ const User = require('./../models/User'); // Yolunuzu yoxlayın
 const ApplicantProfile = require('./../models/ApplicantProfile'); // Yolunuzu yoxlayın
 const asyncHandler = require('./../middleware/async'); // Yolunuzu yoxlayın
 
-// @desc    Bütün iş elanlarını gətir və filter et
-// @route   GET /api/jobs
-// @access  Public
 exports.getJobs = asyncHandler(async (req, res) => {
   let filter = {}; // Boş filter obyekti
 
-  // Query parametrlərini çıxar
   const { 
     category, 
     location, 
@@ -28,7 +24,6 @@ exports.getJobs = asyncHandler(async (req, res) => {
     if (categoryDoc) {
       filter.category = categoryDoc._id;
     } else {
-      // Əgər kateqoriya tapılmasa, heç bir iş qaytarma (və ya xəta verə bilərsiniz)
       return res.status(200).json({
         success: true,
         count: 0,
@@ -37,33 +32,27 @@ exports.getJobs = asyncHandler(async (req, res) => {
     }
   }
 
-  // Yer üzrə filter (case-insensitive, qismən uyğunlaşma)
   if (location) {
     filter.location = { $regex: location, $options: 'i' };
   }
 
-  // Maaş aralığı üzrə filter (dəqiq uyğunlaşma)
   if (salaryRange) {
     filter.salaryRange = salaryRange;
   }
 
-  // İş növü üzrə filter (dəqiq uyğunlaşma)
   if (jobType) {
     filter.jobType = jobType;
   }
 
-  // Təcrübə səviyyəsi üzrə filter (dəqiq uyğunlaşma)
   if (experienceLevel) {
     filter.experienceLevel = experienceLevel;
   }
 
-  // Şirkət adı üzrə filter (case-insensitive, qismən uyğunlaşma)
   if (companyName) {
     const companies = await Company.find({ companyName: { $regex: companyName, $options: 'i' } });
     if (companies.length > 0) {
       filter.company = { $in: companies.map(comp => comp._id) };
     } else {
-      // Əgər şirkət tapılmasa, heç bir iş qaytarma
       return res.status(200).json({
         success: true,
         count: 0,
@@ -72,13 +61,12 @@ exports.getJobs = asyncHandler(async (req, res) => {
     }
   }
 
-  // İş elanının başlığı üzrə filter (case-insensitive, qismən uyğunlaşma)
   if (title) {
     filter.title = { $regex: title, $options: 'i' };
   }
 
   const jobs = await Job.find(filter)
-    .populate('company', 'companyName industry logoUrl') // logoUrl indi daxildir
+    .populate('company', 'companyName industry logoUrl') 
     .populate('category', 'name')
     .sort('-createdAt');
 
@@ -89,10 +77,8 @@ exports.getJobs = asyncHandler(async (req, res) => {
   });
 });
 
-// ID-yə görə tək iş elanını gətir
 exports.getJob = asyncHandler(async (req, res) => {
   const job = await Job.findById(req.params.id)
-    // DÜZƏLİŞ: 'company' populate edərkən 'logoUrl' əlavə edildi
     .populate('company', 'companyName description address website phone logoUrl establishedYear')
     .populate('category', 'name');
 
@@ -106,7 +92,6 @@ exports.getJob = asyncHandler(async (req, res) => {
   });
 });
 
-// Yeni iş elanı yarat
 exports.createJob = asyncHandler(async (req, res) => {
   const company = await Company.findOne({ userId: req.user.id });
 
@@ -190,9 +175,7 @@ exports.deleteJob = asyncHandler(async (req, res) => {
   });
 });
 
-// İşə müraciət et
-// @route   POST /api/jobs/:id/apply
-// @access  Private (yalnız iş axtaran)
+
 exports.applyJob = asyncHandler(async (req, res) => {
   const job = await Job.findById(req.params.id);
 
@@ -229,9 +212,7 @@ exports.applyJob = asyncHandler(async (req, res) => {
   });
 });
 
-// Şirkət tərəfindən yerləşdirilən iş elanlarını gətir
-// @route   GET /api/jobs/company/myjobs
-// @access  Private (yalnız şirkət)
+
 exports.getCompanyJobs = asyncHandler(async (req, res) => {
   const company = await Company.findOne({ userId: req.user.id });
 
@@ -250,8 +231,7 @@ exports.getCompanyJobs = asyncHandler(async (req, res) => {
   });
 });
 
-// Müraciət edən şəxslərin siyahısını gətir
-// @route   GET /api/jobs/:id/applicants
+
 // @access  Private (yalnız iş elanını yaradan şirkət)
 exports.getJobApplicants = asyncHandler(async (req, res) => {
   const job = await Job.findById(req.params.id);

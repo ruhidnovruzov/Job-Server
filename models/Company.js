@@ -39,7 +39,7 @@ const companySchema = mongoose.Schema({
   },
   logoUrl: {
     type: String,
-    default: 'https://via.placeholder.com/150' // Varsayılan loqo URL-i
+    default: 'https://via.placeholder.com/150' 
   },
   establishedYear: {
     type: Number

@@ -17,9 +17,7 @@ const generateToken = (id) => {
   });
 };
 
-// @desc    İstifadəçi qeydiyyatı
-// @route   POST /api/auth/register
-// @access  Public
+
 const registerUser = async (req, res) => {
   const {
     email,
@@ -102,9 +100,7 @@ const registerUser = async (req, res) => {
   }
 };
 
-// @desc    İstifadəçi girişi
-// @route   POST /api/auth/login
-// @access  Public
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
@@ -154,9 +150,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-// @desc    Şifrəni unutdum
-// @route   POST /api/auth/forgot-password
-// @access  Public
+
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
 
@@ -247,9 +241,7 @@ const forgotPassword = async (req, res) => {
   }
 };
 
-// @desc    Şifrəni sıfırla
-// @route   PUT /api/auth/reset-password/:resettoken
-// @access  Public
+
 const resetPassword = async (req, res) => {
   const { password } = req.body;
 

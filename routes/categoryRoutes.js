@@ -4,10 +4,10 @@ const { protect, authorize } = require('../middleware/authMiddleware');
 const router = express.Router();
 
 router.route('/')
-  .get(getCategories) // Bütün kateqoriyaları gətir (Public)
-  .post(protect, authorize(['admin']), createCategory); // Yeni kateqoriya yarat (Yalnız Admin)
+  .get(getCategories)
+  .post(protect, authorize(['admin']), createCategory); 
 
 router.route('/:id')
-  .delete(protect, authorize(['admin']), deleteCategory); // Kateqoriya sil (Yalnız Admin)
+  .delete(protect, authorize(['admin']), deleteCategory);
 
 module.exports = router;

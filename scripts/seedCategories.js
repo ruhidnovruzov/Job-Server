@@ -27,7 +27,7 @@ const categories = [
 const seedCategories = async () => {
   try {
     console.log('Kateqoriyalar silinir...');
-    await Category.deleteMany(); // Mövcud kateqoriyaları sil
+    await Category.deleteMany(); 
 
     console.log('Yeni kateqoriyalar əlavə edilir...');
     await Category.insertMany(categories);

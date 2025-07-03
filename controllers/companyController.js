@@ -6,24 +6,18 @@ const path = require('path'); // Fayl yolları ilə işləmək üçün
 const multer = require('multer'); // Fayl yükləmə üçün
 const { v4: uuidv4 } = require('uuid'); // Unikal fayl adları üçün
 
-// Multer storage konfiqurasiyası
-// Yüklənən şirkət loqolarını layihənin kök qovluğundakı 'uploads/companyLogos' qovluğunda saxlayacaq
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Faylların saxlanacağı qovluğu
-    // `process.cwd()` Node.js prosesinin cari iş qovluğudur (adətən layihənin kök qovluğu)
+
     cb(null, path.join(process.cwd(), 'uploads/companyLogos')); // Fayllar kök qovluqdaki uploads/companyLogos'a düşür
   },
   filename: function (req, file, cb) {
-    // Yüklənən fayla unikal ad verin
-    // Faylın orijinal uzantısını saxlayın (məsələn, .png, .jpg)
-    const extname = path.extname(file.originalname);
+
     cb(null, `${uuidv4()}${extname}`); // Unikal ID + orijinal uzantı
   },
 });
 
-// Fayl filtrləmə funksiyası
-// Yalnız müəyyən şəkil tiplərinə (JPEG, PNG, GIF) icazə verin
+
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/gif') {
     cb(null, true); // Yükləməyə icazə verin
@@ -32,9 +26,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Multer upload middleware-i
-// Maksimum fayl ölçüsü 2 MB olaraq təyin edilib
-// 'logo' input sahəsindən gələn tək faylı qəbul edir
+
 const upload = multer({
   storage: storage,
   limits: { fileSize: 1024 * 1024 * 2 }, // 2 MB
@@ -42,9 +34,6 @@ const upload = multer({
 }).single('logo'); // HTML formunda input elementinin 'name' attribute-u 'logo' olmalıdır
 
 
-// @desc    Cari daxil olmuş şirkətin profilini gətir
-// @route   GET /api/companies/me
-// @access  Private (Yalnız 'company' rolu olan istifadəçilər üçün)
 exports.getCompanyProfile = asyncHandler(async (req, res) => {
   // Daxil olmuş istifadəçinin ID-si ilə əlaqəli şirkət profilini tapın
   const company = await Company.findOne({ userId: req.user.id })
@@ -62,9 +51,7 @@ exports.getCompanyProfile = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Cari daxil olmuş şirkətin profilini yenilə
-// @route   PUT /api/companies/profile
-// @access  Private (Yalnız 'company' rolu olan istifadəçilər üçün)
+
 exports.updateCompanyProfile = asyncHandler(async (req, res, next) => {
   // Multer yükləmə prosesini idarə edin
   upload(req, res, async (err) => {
@@ -98,31 +85,25 @@ exports.updateCompanyProfile = asyncHandler(async (req, res, next) => {
       establishedYear
     };
 
-    // Əgər yeni bir fayl yüklənibsə (Multer tərəfindən 'req.file' olaraq əlavə olunur)
     if (req.file) {
-      // Loqo URL-ini yüklənən faylın yolu ilə yeniləyin
-      // 'uploads/' qovluğu statik fayl serveri üçün kök kimi təyin edilib
+
       profileFields.logoUrl = `/uploads/companyLogos/${req.file.filename}`;
     }
 
-    // Daxil olmuş istifadəçinin şirkət profilini tapın
     let companyProfile = await Company.findOne({ userId: req.user.id });
 
-    // Əgər profil mövcud deyilsə (nadir halda qeydiyyatda səhv olarsa)
     if (!companyProfile) {
-      // Yeni profil yaradın
+      // Yeni profil
       profileFields.userId = req.user.id;
       companyProfile = await Company.create(profileFields);
       // Şirkət adı ilə əsas istifadəçi display adını da güncəlləyin
       await User.findByIdAndUpdate(req.user.id, { displayName: companyName });
 
     } else {
-      // Profil mövcuddursa, yeniləyin
-      // Əgər yeni loqo yüklənibsə VƏ əvvəlki loqo placeholder deyilsə, köhnə loqonu silin
+
       if (req.file && companyProfile.logoUrl && companyProfile.logoUrl !== "https://via.placeholder.com/150") {
-        // `companyProfile.logoUrl` `/uploads/companyLogos/filename.jpg` formatında olacaq.
-        // `process.cwd()` layihənin kök qovluğunu verir, beləliklə doğru yolu qururuq.
-        const oldLogoPath = path.join(process.cwd(), companyProfile.logoUrl); // <-- DÜZƏLDİLMİŞ YOL HESABLAMASI
+
+        const oldLogoPath = path.join(process.cwd(), companyProfile.logoUrl); 
             
         if (require('fs').existsSync(oldLogoPath)) {
           require('fs').unlinkSync(oldLogoPath); // Köhnə faylı silin
@@ -162,10 +143,3 @@ exports.updateCompanyProfile = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Bütün şirkət profillərini al (Admin üçün) - Example, not directly used in this flow
-// @route   GET /api/companies/all
-// @access  Private (Yalnız Admin)
-// exports.getAllCompanies = asyncHandler(async (req, res) => {
-//     const companies = await Company.find().populate('userId', 'email role');
-//     res.status(200).json({ success: true, count: companies.length, data: companies });
-// });

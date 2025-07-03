@@ -5,9 +5,7 @@ const User = require('../models/User');
 const ApplicantProfile = require('../models/ApplicantProfile');
 const Company = require('../models/Company');
 
-// @desc    Get all users (Bütün istifadəçiləri almaq - yalnız admin)
-// @route   GET /api/admin/users
-// @access  Private/Admin
+
 router.get('/users', protect, authorize(['admin']), async (req, res) => {
   try {
     const users = await User.find({}).select('-password');
@@ -96,9 +94,7 @@ router.get('/users/:id', protect, authorize(['admin']), async (req, res) => {
   }
 });
 
-// @desc    Delete a user (İstifadəçini silmək - yalnız admin)
-// @route   DELETE /api/admin/users/:id
-// @access  Private/Admin
+
 router.delete('/users/:id', protect, authorize(['admin']), async (req, res) => {
   try {
     const user = await User.findById(req.params.id);

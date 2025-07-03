@@ -12,7 +12,6 @@ const {
 const { protect, authorize } = require('../middleware/authMiddleware');
 const router = express.Router();
 
-// Filter route (query parametrlərlə işləyir)
 router.get('/filter', getJobs);
 
 router.route('/')

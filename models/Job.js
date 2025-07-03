@@ -52,7 +52,7 @@ const JobSchema = new mongoose.Schema({
         ref: 'User',
         required: true
       },
-      resume: String, // Əgər CV yolu saxlamaq istəyirsənsə
+      resume: String, 
       appliedAt: {
         type: Date,
         default: Date.now
@@ -65,7 +65,6 @@ const JobSchema = new mongoose.Schema({
   }
 });
 
-// Şirkət və kateqoriya üçün virtual populate-lar
 JobSchema.virtual('companyName', {
   ref: 'Company',
   localField: 'company',
@@ -82,15 +81,13 @@ JobSchema.virtual('categoryName', {
   options: { select: 'name' }
 });
 
-// Virtual sahələri JSON cavablarına daxil et
 JobSchema.set('toJSON', { virtuals: true });
 JobSchema.set('toObject', { virtuals: true });
 
-// Hər dəfə find zamanı company və category-ni avtomatik populate et
 JobSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'company',
-    select: 'companyName industry logoUrl' // <-- logoUrl əlavə et
+    select: 'companyName industry logoUrl' 
   }).populate({
     path: 'category',
     select: 'name'

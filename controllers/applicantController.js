@@ -2,9 +2,7 @@ const ApplicantProfile = require('../models/ApplicantProfile');
 const User = require('../models/User');
 const asyncHandler = require('../middleware/async');
 
-// @desc    İş axtaranın profilini güncəlləmək
-// @route   PUT /api/applicants/profile
-// @access  Private (yalnız iş axtaran)
+
 exports.updateApplicantProfile = asyncHandler(async (req, res) => {
   const { firstName, lastName, phone, category, yearsOfExperience, about, skills, education, experience } = req.body;
 
